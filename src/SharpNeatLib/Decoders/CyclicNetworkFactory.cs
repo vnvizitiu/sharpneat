@@ -26,28 +26,30 @@ namespace SharpNeat.Decoders
         /// Creates a CyclicNetwork from an INetworkDefinition.
         /// </summary>
         public static CyclicNetwork CreateCyclicNetwork(INetworkDefinition networkDef,
-                                                           NetworkActivationScheme activationScheme)
+                                                        NetworkActivationScheme activationScheme,
+                                                        bool boundedOutput)
         {
             List<Neuron> neuronList;
             List<Connection> connectionList;
             InternalDecode(networkDef, out neuronList, out connectionList);
 
             // Construct neural net.
-            if(activationScheme.RelaxingActivation)
-            {
+            if(activationScheme.RelaxingActivation) {
                 return new RelaxingCyclicNetwork(neuronList,
                                                  connectionList,
                                                  networkDef.InputNodeCount,
                                                  networkDef.OutputNodeCount,
                                                  activationScheme.MaxTimesteps,
-                                                 activationScheme.SignalDeltaThreshold);
+                                                 activationScheme.SignalDeltaThreshold,
+                                                 boundedOutput);
             }
 
             return new CyclicNetwork(neuronList,
                                      connectionList,
                                      networkDef.InputNodeCount,
                                      networkDef.OutputNodeCount,
-                                     activationScheme.TimestepsPerActivation);
+                                     activationScheme.TimestepsPerActivation,
+                                     boundedOutput);
         }
 
         #endregion
@@ -64,7 +66,7 @@ namespace SharpNeat.Decoders
             neuronList = new List<Neuron>(nodeCount);
 
             // A dictionary of neurons keyed on their innovation ID.
-            Dictionary<uint,Neuron> neuronDictionary = new Dictionary<uint,Neuron>(nodeCount);
+            var neuronDictionary = new Dictionary<uint,Neuron>(nodeCount);
 
             // Loop neuron genes.
             IActivationFunctionLibrary activationFnLib = networkDef.ActivationFnLibrary;

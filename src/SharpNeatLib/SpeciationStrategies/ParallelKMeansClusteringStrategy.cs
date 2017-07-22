@@ -90,7 +90,7 @@ namespace SharpNeat.SpeciationStrategies
         public void SpeciateGenomes(IList<TGenome> genomeList, IList<Specie<TGenome>> specieList)
         {
             Debug.Assert(SpeciationUtils.TestEmptySpecies(specieList), "SpeciateGenomes(IList<TGenome>,IList<Species<TGenome>>) called with non-empty species");
-            Debug.Assert(genomeList.Count >= specieList.Count, string.Format("SpeciateGenomes(IList<TGenome>,IList<Species<TGenome>>). Species count [{0}] is greater than genome count [{1}].", specieList.Count, genomeList.Count));
+            Debug.Assert(genomeList.Count >= specieList.Count, $"SpeciateGenomes(IList<TGenome>,IList<Species<TGenome>>). Species count [{specieList.Count}] is greater than genome count [{genomeList.Count}].");
 
             // Randomly allocate the first k genomes to their own specie. Because there is only one genome in these
             // species each genome effectively represents a specie centroid. This is necessary to ensure we get k specieList.
@@ -359,7 +359,7 @@ namespace SharpNeat.SpeciationStrategies
             }
 
             // The centroid calculation is a function of the distance metric.
-            return _distanceMetric.CalculateCentroidParallel(coordList);
+            return _distanceMetric.CalculateCentroid(coordList);
         }
 
         // ENHANCEMENT: Optimization candidate.
@@ -375,7 +375,7 @@ namespace SharpNeat.SpeciationStrategies
             Parallel.For(0, genomeCount, _parallelOptions, delegate(int i)
             {
                 TGenome genome = genomeList[i];
-                double distance = _distanceMetric.MeasureDistance(genome.Position, specieList[genome.SpecieIdx].Centroid);
+                double distance = _distanceMetric.GetDistance(genome.Position, specieList[genome.SpecieIdx].Centroid);
                 genomeDistanceArr[i] = new GenomeDistancePair<TGenome>(distance, genome);
             });
 
@@ -399,13 +399,13 @@ namespace SharpNeat.SpeciationStrategies
         {
             // Measure distance to first specie's centroid.
             Specie<TGenome> closestSpecie = specieList[0];
-            double closestDistance = _distanceMetric.MeasureDistance(genome.Position, closestSpecie.Centroid);
+            double closestDistance = _distanceMetric.GetDistance(genome.Position, closestSpecie.Centroid);
 
             // Measure distance to all remaining species.
             int speciesCount = specieList.Count;
             for(int i=1; i<speciesCount; i++)
             {
-                double distance = _distanceMetric.MeasureDistance(genome.Position, specieList[i].Centroid);
+                double distance = _distanceMetric.GetDistance(genome.Position, specieList[i].Centroid);
                 if(distance < closestDistance)
                 {
                     closestDistance = distance;

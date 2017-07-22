@@ -28,7 +28,8 @@ namespace SharpNeat.Decoders
         /// Creates a CyclicNetwork from an INetworkDefinition.
         /// </summary>
         public static FastCyclicNetwork CreateFastCyclicNetwork(INetworkDefinition networkDef,
-                                                                NetworkActivationScheme activationScheme)
+                                                                NetworkActivationScheme activationScheme,
+                                                                bool boundedOutput)
         {
             FastConnection[] fastConnectionArray;
             IActivationFunction[] activationFnArray;
@@ -38,8 +39,7 @@ namespace SharpNeat.Decoders
                            out fastConnectionArray, out activationFnArray, out neuronAuxArgsArray);
 
             // Construct neural net.
-            if(activationScheme.RelaxingActivation)
-            {
+            if(activationScheme.RelaxingActivation) {
                 return new FastRelaxingCyclicNetwork(fastConnectionArray,
                                                      activationFnArray, 
                                                      neuronAuxArgsArray,
@@ -47,7 +47,8 @@ namespace SharpNeat.Decoders
                                                      networkDef.InputNodeCount,
                                                      networkDef.OutputNodeCount,
                                                      activationScheme.MaxTimesteps,
-                                                     activationScheme.SignalDeltaThreshold);
+                                                     activationScheme.SignalDeltaThreshold,
+                                                     boundedOutput);
             }
 
             return new FastCyclicNetwork(fastConnectionArray,
@@ -56,7 +57,8 @@ namespace SharpNeat.Decoders
                                          networkDef.NodeList.Count,
                                          networkDef.InputNodeCount,
                                          networkDef.OutputNodeCount,
-                                         activationScheme.TimestepsPerActivation);
+                                         activationScheme.TimestepsPerActivation,
+                                         boundedOutput);
         }
 
         #endregion

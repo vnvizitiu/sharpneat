@@ -465,7 +465,7 @@ namespace SharpNeat.Genomes.Neat
         /// </summary>
         public int InputBiasOutputNeuronCount
         {
-            get { return _inputAndBiasNeuronCount; }
+            get { return _inputBiasOutputNeuronCount; }
         }
 
         #endregion
@@ -483,12 +483,12 @@ namespace SharpNeat.Genomes.Neat
             // Select a type of mutation and attempt to perform it. If that mutation is not possible
             // then we eliminate that possibility from the roulette wheel and try again until a mutation is successful 
             // or we have no mutation types remaining to try.
-            DiscreteDistribution rwlCurrent = rwlInitial;
+            DiscreteDistribution distCurrent = rwlInitial;
             bool success = false;
             bool structureChange = false;
             for(;;)
             {
-                int outcome = DiscreteDistributionUtils.Sample(rwlCurrent, _genomeFactory.Rng);
+                int outcome = distCurrent.Sample(_genomeFactory.Rng);
                 switch(outcome)
                 {
                     case 0:
@@ -523,8 +523,8 @@ namespace SharpNeat.Genomes.Neat
                 }
 
                 // Mutation did not succeed. Remove attempted type of mutation from set of possible outcomes.
-                rwlCurrent = rwlCurrent.RemoveOutcome(outcome);
-                if(0 == rwlCurrent.Probabilities.Length)
+                distCurrent = distCurrent.RemoveOutcome(outcome);
+                if(0 == distCurrent.Probabilities.Length)
                 {   // Nothing left to try. Do nothing.
                     return;
                 }
@@ -639,9 +639,9 @@ namespace SharpNeat.Genomes.Neat
                 // this is possible because genes can be acquired from other genomes via sexual reproduction.
                 // Therefore we only re-use IDs if we can re-use all three together, otherwise we aren't assigning the IDs to matching
                 // structures throughout the population, which is the reason for ID re-use.
-                if(_neuronGeneList.BinarySearch(idStruct.AddedNeuronId) == -1
-                && _connectionGeneList.BinarySearch(idStruct.AddedInputConnectionId) == -1
-                && _connectionGeneList.BinarySearch(idStruct.AddedOutputConnectionId) == -1)             
+                if(_neuronGeneList.BinarySearch(idStruct.AddedNeuronId) < 0
+                && _connectionGeneList.BinarySearch(idStruct.AddedInputConnectionId) < 0
+                && _connectionGeneList.BinarySearch(idStruct.AddedOutputConnectionId) < 0)             
                 {
                     // Return true to indicate re-use of existing IDs.
                     return true;
@@ -880,7 +880,7 @@ namespace SharpNeat.Genomes.Neat
             // ENHANCEMENT: Target for performance improvement.
             // Select neuron to mutate. Depending on the genome type it may be the case that not all genomes have mutable state, hence
             // we may have to scan for mutable neurons.
-            int auxStateNodeIdx = DiscreteDistributionUtils.SampleUniformDistribution(_auxStateNeuronCount, _genomeFactory.Rng) + 1;
+            int auxStateNodeIdx = _genomeFactory.Rng.Next(_auxStateNeuronCount) + 1;
 
             IActivationFunctionLibrary fnLib = _genomeFactory.ActivationFnLibrary;
             NeuronGene gene;
@@ -1265,7 +1265,7 @@ namespace SharpNeat.Genomes.Neat
         {
             // Check genome class type (can only do this if we have a genome factory).
             if(null != _genomeFactory && !_genomeFactory.CheckGenomeType(this)) {
-                Debug.WriteLine(string.Format("Invalid genome class type [{0}]", this.GetType().Name));
+                Debug.WriteLine($"Invalid genome class type [{this.GetType().Name}]");
                 return false;
             }
 
@@ -1274,7 +1274,7 @@ namespace SharpNeat.Genomes.Neat
             
             // We will always have at least a bias and an output.
             if(count < 2) {
-                Debug.WriteLine(string.Format("NeuronGeneList has less than the minimum number of neuron genes [{0}]", count));
+                Debug.WriteLine($"NeuronGeneList has less than the minimum number of neuron genes [{count}]");
                 return false;
             }
 
@@ -1285,7 +1285,7 @@ namespace SharpNeat.Genomes.Neat
             }
 
             if(0u != _neuronGeneList[0].InnovationId) {
-                Debug.WriteLine(string.Format("Bias neuron ID != 0. [{0}]", _neuronGeneList[0].InnovationId));
+                Debug.WriteLine($"Bias neuron ID != 0. [{_neuronGeneList[0].InnovationId}]");
                 return false;
             }
 
@@ -1295,7 +1295,7 @@ namespace SharpNeat.Genomes.Neat
             for(int i=0; i<_inputNeuronCount; i++, idx++)
             {
                 if(NodeType.Input != _neuronGeneList[idx].NodeType) {
-                    Debug.WriteLine(string.Format("Invalid neuron gene type. Expected Input, got [{0}]", _neuronGeneList[idx].NodeType));
+                    Debug.WriteLine($"Invalid neuron gene type. Expected Input, got [{_neuronGeneList[idx].NodeType}]");
                     return false;
                 }
 
@@ -1311,7 +1311,7 @@ namespace SharpNeat.Genomes.Neat
             for(int i=0; i<_outputNeuronCount; i++, idx++)
             {
                 if(NodeType.Output != _neuronGeneList[idx].NodeType) {
-                    Debug.WriteLine(string.Format("Invalid neuron gene type. Expected Output, got [{0}]", _neuronGeneList[idx].NodeType));
+                    Debug.WriteLine($"Invalid neuron gene type. Expected Output, got [{_neuronGeneList[idx].NodeType}]");
                     return false;
                 }
 
@@ -1328,7 +1328,7 @@ namespace SharpNeat.Genomes.Neat
             for(; idx<count; idx++)
             {
                 if(NodeType.Hidden != _neuronGeneList[idx].NodeType) {
-                    Debug.WriteLine(string.Format("Invalid neuron gene type. Expected Hidden, got [{0}]", _neuronGeneList[idx].NodeType));
+                    Debug.WriteLine($"Invalid neuron gene type. Expected Hidden, got [{_neuronGeneList[idx].NodeType}]");
                     return false;
                 }
 

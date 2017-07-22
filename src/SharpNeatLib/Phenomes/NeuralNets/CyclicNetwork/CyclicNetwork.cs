@@ -58,7 +58,8 @@ namespace SharpNeat.Phenomes.NeuralNets
                                 List<Connection> connectionList,
                                 int inputNeuronCount,
                                 int outputNeuronCount,
-                                int timestepsPerActivation)
+                                int timestepsPerActivation,
+                                bool boundedOutput)
         {
             _neuronList = neuronList;
             _connectionList = connectionList;
@@ -71,7 +72,12 @@ namespace SharpNeat.Phenomes.NeuralNets
             _outputSignalArray = new double[_outputNeuronCount];
 
             _inputSignalArrayWrapper = new SignalArray(_inputSignalArray, 0, _inputNeuronCount);
-            _outputSignalArrayWrapper = new SignalArray(_outputSignalArray, 0, outputNeuronCount);
+
+            if(boundedOutput) {
+                _outputSignalArrayWrapper = new OutputSignalArray(_outputSignalArray, 0, outputNeuronCount);
+            } else {
+                _outputSignalArrayWrapper = new SignalArray(_outputSignalArray, 0, outputNeuronCount);
+            }
         }
 
         #endregion
@@ -150,10 +156,15 @@ namespace SharpNeat.Phenomes.NeuralNets
                     connection.TargetNeuron.InputValue += connection.OutputValue;
                 }
 
+                // TODO: Performance tune the activation function method call.
+                // The call to Calculate() cannot be inlined because it is via an interface and therefore requires a virtual table lookup.
+                // The obvious/simplest performance improvement would be to pass an array of values to Calculate(), but the auxargs parameter
+                // currently thwarts the performance boost of that approach.
+
                 // Loop over all output and hidden neurons, passing their input signal through their activation
                 // function to produce an output value. Note we skip bias and input neurons because they have a 
                 // fixed output value.
-                for(int j=_inputAndBiasNeuronCount; j<neuronCount; j++) 
+                for (int j=_inputAndBiasNeuronCount; j<neuronCount; j++) 
                 {
                     Neuron neuron = _neuronList[j];
                     neuron.OutputValue = neuron.ActivationFunction.Calculate(neuron.InputValue, neuron.AuxiliaryArguments);

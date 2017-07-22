@@ -43,7 +43,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\SharpNeatLib.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -57,13 +58,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Redzen, Version=1.0.5.0, Culture=neutral, PublicKeyToken=182843a4be0a74f7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Redzen.1.0.5.0\lib\net40\Redzen.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Redzen, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Redzen.3.0.2\lib\net40\Redzen.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -122,7 +122,19 @@
     <Compile Include="Genomes\RbfNeat\RbfGenomeFactory.cs" />
     <Compile Include="Network\ActivationFunctions\ActivationFunctionInfo.cs" />
     <Compile Include="Genomes\HyperNeat\CppnGenomeFactory.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\TanH.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\ArcTan.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\MaxMinusOne.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\ArcSinH.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\ReLU.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\LeakyReLUShifted.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\LogisticApproximantSteep.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\LeakyReLU.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\ScaledELU.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\SReLUShifted.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\SReLU.cs" />
     <Compile Include="Network\ActivationFunctions\RadialBasis\RbfGaussian.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\PolynomialApproximantSteep.cs" />
     <Compile Include="Network\AcyclicNetworkDepthAnalysis.cs" />
     <Compile Include="Network\ConnectionList.cs" />
     <Compile Include="Network\CyclicNetworkDepthAnalysis.cs" />
@@ -167,15 +179,12 @@
     <Compile Include="Network\ActivationFunctions\Bipolar\BipolarSigmoid.cs" />
     <Compile Include="Network\ActivationFunctions\Bipolar\BipolarGaussian.cs" />
     <Compile Include="Network\ActivationFunctions\Bipolar\Linear.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\Absolute.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\AbsoluteRoot.cs" />
     <Compile Include="Network\ActivationFunctions\Unipolar\Gaussian.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\InverseAbsoluteSigmoid.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\PlainSigmoid.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\ReducedSigmoid.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\SoftSignSteep.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\LogisticFunction.cs" />
     <Compile Include="Network\ActivationFunctions\Bipolar\Sine.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\SteepenedSigmoid.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\SteepenedSigmoidApproximation.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\LogisticFunctionSteep.cs" />
+    <Compile Include="Network\ActivationFunctions\Unipolar\QuadraticSigmoid.cs" />
     <Compile Include="Phenomes\MappingSignalArray.cs" />
     <Compile Include="Phenomes\NeuralNets\AcyclicNetwork\FastAcyclicNetwork.cs" />
     <Compile Include="Phenomes\NeuralNets\AcyclicNetwork\LayerInfo.cs" />
@@ -186,11 +195,12 @@
     <Compile Include="Phenomes\NeuralNets\FastCyclicNetwork\FastConnection.cs" />
     <Compile Include="Phenomes\NeuralNets\FastCyclicNetwork\FastCyclicNetwork.cs" />
     <Compile Include="Phenomes\NeuralNets\FastCyclicNetwork\FastRelaxingCyclicNetwork.cs" />
+    <Compile Include="Phenomes\OutputMappingSignalArray.cs" />
+    <Compile Include="Phenomes\OutputSignalArray.cs" />
     <Compile Include="Phenomes\SignalArray.cs" />
     <Compile Include="Network\NodeType.cs" />
     <Compile Include="Network\IActivationFunction.cs" />
     <Compile Include="Network\ActivationFunctions\NullFn.cs" />
-    <Compile Include="Network\ActivationFunctions\Unipolar\StepFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

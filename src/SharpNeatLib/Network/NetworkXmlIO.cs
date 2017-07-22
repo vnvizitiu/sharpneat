@@ -505,7 +505,7 @@ namespace SharpNeat.Network
                 case "hid":
                     return NodeType.Hidden;
             }
-            throw new InvalidDataException(string.Format("Unknown node type [{0}]", type));
+            throw new InvalidDataException($"Unknown node type [{type}]");
         }
 
         /// <summary>
@@ -525,7 +525,7 @@ namespace SharpNeat.Network
                 case NodeType.Hidden:
                     return "hid";
             }
-            throw new ArgumentException(string.Format("Unexpected NodeType [{0}]", nodeType));
+            throw new ArgumentException($"Unexpected NodeType [{nodeType}]");
         }
 
         /// <summary>
@@ -543,28 +543,28 @@ namespace SharpNeat.Network
                     return Linear.__DefaultInstance;
                 case "Sine":
                     return Sine.__DefaultInstance;
-                case "Absolute":
-                    return Absolute.__DefaultInstance;
-                case "AbsoluteRoot":
-                    return AbsoluteRoot.__DefaultInstance;
+
                 case "Gaussian":
                     return Gaussian.__DefaultInstance;
-                case "InverseAbsoluteSigmoid":
-                    return InverseAbsoluteSigmoid.__DefaultInstance;
-                case "PlainSigmoid":
-                    return PlainSigmoid.__DefaultInstance;
-                case "ReducedSigmoid":
-                    return ReducedSigmoid.__DefaultInstance;
-                case "SteepenedSigmoid":
-                    return SteepenedSigmoid.__DefaultInstance;
-                case "SteepenedSigmoidApproximation":
-                    return SteepenedSigmoidApproximation.__DefaultInstance;
-                case "StepFunction":
-                    return StepFunction.__DefaultInstance;
+                case "LogisticFunction":
+                    return LogisticFunction.__DefaultInstance;
+                case "LogisticFunctionSteep":
+                    return LogisticFunctionSteep.__DefaultInstance;
+                case "PolynomialApproximantSteep":
+                    return PolynomialApproximantSteep.__DefaultInstance;
+                case "QuadraticSigmoid":
+                    return QuadraticSigmoid.__DefaultInstance;
+                case "SoftSignSteep":
+                    return SoftSignSteep.__DefaultInstance;
+                case "SReLU":
+                    return SReLU.__DefaultInstance;
+                case "SReLUShifted":
+                    return SReLUShifted.__DefaultInstance;
+
                 case "RbfGaussian":
                     return RbfGaussian.__DefaultInstance;
             }
-            throw new ArgumentException(string.Format("Unexpected activation function [{0}]", name));
+            throw new ArgumentException($"Unexpected activation function [{name}]");
         }
 
         #endregion
